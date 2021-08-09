@@ -34,6 +34,7 @@ const app = createApp({
       for (let i = 0; i < userData.num; i++) {
         let userLength = lotteryGame.userList.length;
         const winIndex = Math.floor(Math.random()*userLength);
+        if (!lotteryGame.userList[winIndex]) { return alert('沒人了怎麼抽'); }
         const winUser = lotteryGame.userList[winIndex];
         console.log('抽中編號：', winIndex);
         winner.push(winUser);
