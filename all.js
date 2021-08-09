@@ -46,6 +46,7 @@ const app = createApp({
       lotteryGame.winner.push({
         id: new Date().getTime(),
         title: userData.itemName,
+        num: userData.num,
         winner
       })
 

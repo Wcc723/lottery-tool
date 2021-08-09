@@ -57,10 +57,10 @@
       <div class="col-8 mt-5">
         <hr>
         <div class="mb-4" v-for="item in lotteryGame.winner" :key="item.id">
-          <h5>品項：『{{ item.title }}』，得獎名單：</h5>
+          <h5>品項：『{{ item.title }}』- 名額共 {{ item.num }} 名，得獎名單：</h5>
           <ol>
             <li v-for="winner in item.winner">
-              {{ winner.name }} 恭喜得獎
+              {{ winner.name }}
             </li>
           </ol>
         </div>
