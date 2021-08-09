@@ -18,11 +18,11 @@ const app = createApp({
       }
     );
 
-    let lotteryGame = reactive({
+    const lotteryGame = reactive({
       userList: [],
       winner: [],
       isStart: false,
-    })
+    });
     const getLottery = () => {
       if (!lotteryGame.isStart) {
         // 如果還沒開始，就重置資料
@@ -50,7 +50,9 @@ const app = createApp({
 
     }
     const reset = () => {
-      lotteryGame = reactive({});
+      lotteryGame.userList = [];
+      lotteryGame.winner = [];
+      lotteryGame.isStart = false;
     }
 
     return {
