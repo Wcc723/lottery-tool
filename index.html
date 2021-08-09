@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>不會上傳個資的抽獎工具</title>
+  <link rel="stylesheet" href="./stylesheets/all.css">
+</head>
+<body>
+
+  <div class="container mt-3" id="app">
+    <div class="row justify-content-center">
+      <div class="col-8">
+        <div class="mb-3">
+          <label for="title" class="form-label">抽獎標題</label>
+          <input type="text" class="form-control" id="title" placeholder="抽獎標題"
+          v-model="userData.title">
+        </div>
+
+        <div class="mb-3">
+          <label for="userList" class="form-label">請輸入名單（CSV）</label>
+          <textarea class="form-control" id="userList" rows="10"
+          v-model="userData.userList" :disabled="lotteryGame.isStart"></textarea>
+          名單數量：{{ userData.userArray.length }}
+        </div>
+
+        <div class="mb-3">
+          <label for="lottery-item" class="form-label">當前抽獎的品項</label>
+          <input type="text" class="form-control" id="lottery-item" placeholder="品項名稱"
+          v-model="userData.itemName">
+        </div>
+
+        <div class="mb-3">
+          <label for="lottery-num" class="form-label">抽出的數量</label>
+          <input type="number" class="form-control" id="lottery-num"
+          v-model.number="userData.num" min="1">
+        </div>
+
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="noRepeat" v-model="userData.noRepeat">
+          <label class="form-check-label" for="noRepeat">不重複得獎</label>
+        </div>
+
+        <div class="d-flex mt-3">
+          <button type="button" class="btn btn-outline-secondary"
+          @click="reset">重置得獎機會</button>
+          <button type="button" class="btn btn-primary px-5 ms-auto"
+          @click="getLottery"
+          :disabled="!userData.userArray.length">開始抽獎</button>
+        </div>
+        <div class="text-end">
+          還有抽獎機會的人數 {{ lotteryGame.userList.length }}
+        </div>
+      </div>
+
+      <div class="col-8 mt-5">
+        <hr>
+        <div class="mb-4" v-for="item in lotteryGame.winner" :key="item.id">
+          <h5>品項：『{{ item.title }}』，得獎名單：</h5>
+          <ol>
+            <li v-for="winner in item.winner">
+              {{ winner.name }} 恭喜得獎
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./all.js">
+  </script>
+
+</body>
+</html>
