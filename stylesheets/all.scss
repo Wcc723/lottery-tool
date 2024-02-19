@@ -2,3 +2,12 @@
 @import "../node_modules/bootstrap/scss/functions";
 @import "./helpers/variables";
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+body {
+  background-color: transparent;
+  min-height: 100vh;
+}
+html {
+  background-image: linear-gradient(to top, (rgba($primary, .2) 0, transparent 30%));
+  background-size: cover;
+}
