@@ -10,8 +10,58 @@
 <body>
 
   <div class="container mt-3" id="app">
-    <div class="row justify-content-center">
-      <div class="col-8">
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link" :class="{
+          active: nav === 'lottery-items'
+        }" @click="nav = 'lottery-items'">定義品項</button>
+        <button class="nav-link" :class="{
+          active: nav === 'lottery-list'
+        }" type="button" @click="nav = 'lottery-list'">開始抽獎</button>
+      </div>
+    </nav>
+
+    <lottery-items v-if="nav === 'lottery-items'"></lottery-items>
+
+    <keep-alive v-if="nav === 'lottery-list'">
+      <lottery-list></lottery-list>
+    </keep-alive>
+    
+  </div>
+
+  <script type="text/x-template" id="lottery-items">
+    <div class="row justify-content-center mt-3">
+      <div class="col-6">
+        <button class="btn btn-outline-primary mb-3" @click="loadItemFromLocalStorage">讀取產品品項</button>
+        <div class="card mb-2" v-for="item in itemList" :key="item.id">
+          <div class="card-body">
+            <button type="button" class="btn-close float-end" aria-label="Close"
+              v-if="itemList.length > 1"
+              @click="removeItem(item.id)"></button>
+            <div class="mb-3">
+              <label :for="item.id + 'title'" class="form-label">品項名稱</label>
+              <input type="text" class="form-control" :id="item.id + 'title'" placeholder="品項名稱"
+              v-model="item.title">
+            </div>
+            <div>
+              <label :for="item.id + 'num'" class="form-label">品項數量</label>
+              <input type="number" class="form-control" :id="item.id + 'num'" placeholder="品項數量"
+              v-model.number="item.num">
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-outline-primary w-100 mt-3" @click="addItem">新增一個品項</button>
+        
+        <button class="btn btn-primary w-100 mt-3" @click="saveItemToLocalStorage">儲存設定</button>
+
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-template" id="lottery-list">
+    <div class="row justify-content-center mt-3">
+      <div class="col-6">
+        <button class="btn btn-outline-primary mb-3" @click="loadItemFromLocalStorage">讀取產品品項</button>
         <div class="mb-3">
           <label for="title" class="form-label">抽獎標題</label>
           <input type="text" class="form-control" id="title" placeholder="抽獎標題"
@@ -25,17 +75,31 @@
           名單數量：{{ userData.userArray.length }}
         </div>
 
-        <div class="mb-3">
-          <label for="lottery-item" class="form-label">當前抽獎的品項</label>
-          <input type="text" class="form-control" id="lottery-item" placeholder="品項名稱"
-          v-model="userData.itemName">
-        </div>
+        <template v-if="!itemList.length">
+          <div class="mb-3">
+            <label for="lottery-item" class="form-label">當前抽獎的品項</label>
+            <input type="text" class="form-control" id="lottery-item" placeholder="品項名稱"
+            v-model="userData.itemName">
+          </div>
 
-        <div class="mb-3">
-          <label for="lottery-num" class="form-label">抽出的數量</label>
-          <input type="number" class="form-control" id="lottery-num"
-          v-model.number="userData.num" min="1">
-        </div>
+          <div class="mb-3">
+            <label for="lottery-num" class="form-label">抽出的數量</label>
+            <input type="number" class="form-control" id="lottery-num"
+            v-model.number="userData.num" min="1">
+          </div>
+        </template>
+        <template v-else>
+          <div class="mb-3">
+            <label for="lottery-item" class="form-label">抽出的品項</label>
+            <select name="" id="lottery-item" class="form-select" v-model="lotteryItem">
+              <option value="" selected>請選擇抽出的品項</option>
+              <option v-for="item in itemList" :key="item.id" :value="item">
+                {{ item.title }} - {{ item.num }} 名
+              </option>
+            </select>
+          </div>
+        </template>
+        
 
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" id="noRepeat" v-model="userData.noRepeat">
@@ -47,7 +111,7 @@
           @click="reset">重置得獎機會</button>
           <button type="button" class="btn btn-primary px-5 ms-auto"
           @click="getLottery"
-          :disabled="!userData.userArray.length">開始抽獎</button>
+          :disabled="!userData.userArray.length || !lotteryItem.title">開始抽獎</button>
         </div>
         <div class="text-end">
           還有抽獎機會的人數 {{ lotteryGame.userList.length }}
@@ -66,8 +130,7 @@
         </div>
       </div>
     </div>
-  </div>
-
+  </script>
   <script type="module" src="./all.js">
   </script>
 
